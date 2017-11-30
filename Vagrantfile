@@ -1,9 +1,10 @@
-BOX_IMAGE = "centos/7"
+BOX_IMAGE = "ubuntu/xenial64"
 SETUP_MASTER = true
 SETUP_NODES = true
 NODE_COUNT = 2
 MASTER_IP = "192.168.26.10"
 NODE_IP_NW = "192.168.26."
+#NODE_IP_NW = "192.168.122."
 POD_NW_CIDR = "10.244.0.0/16"
 
 #Generate new using steps in README
@@ -19,13 +20,13 @@ MINIONSCRIPT
 $kubemasterscript = <<SCRIPT
 
 kubeadm reset
-kubeadm init --apiserver-advertise-address=#{MASTER_IP} --pod-network-cidr=#{POD_NW_CIDR} --token #{KUBETOKEN} --token-ttl 0
+kubeadm init --apiserver-advertise-address=#{MASTER_IP} --pod-network-cidr=#{POD_NW_CIDR} --token #{KUBETOKEN} --token-ttl 0 --config=/srv/kubeadm/kubeadm-master.yml
 
 mkdir -p $HOME/.kube
 sudo cp -Rf /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
-kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+kubectl apply -f https://raw.githubusercontent.com/xuwenbao/kubernetes-beginner-course/master/examples/chapter-2/kube-flannel.yaml
 
 SCRIPT
 
@@ -38,7 +39,8 @@ Vagrant.configure("2") do |config|
     l.memory = "1024"
   end
 
-  config.vm.provision :shell, :path => "install-centos.sh"
+  config.vm.synced_folder ".", "/srv/kubeadm"
+  config.vm.provision :shell, :path => "setup.sh"
 
   config.hostmanager.enabled = true
   config.hostmanager.manage_guest = true
@@ -55,7 +57,7 @@ Vagrant.configure("2") do |config|
       subconfig.vm.provision :shell, inline: $kubemasterscript
     end
   end
-  
+
   if SETUP_NODES
     (1..NODE_COUNT).each do |i|
       config.vm.define "node#{i}" do |subconfig|
