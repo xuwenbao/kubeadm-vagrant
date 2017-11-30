@@ -29,7 +29,7 @@ cat <<EOF > /etc/apt/sources.list.d/kubernetes.list
 deb http://mirrors.ustc.edu.cn/kubernetes/apt/ kubernetes-xenial main
 EOF
 apt-get update
-apt-get install -y docker.io kubelet kubeadm kubectl kubernetes-cni
+apt-get install -y aufs-tools docker.io kubelet kubeadm kubectl kubernetes-cni
 systemctl enable docker && systemctl start docker
 systemctl enable kubelet && systemctl start kubelet
 
