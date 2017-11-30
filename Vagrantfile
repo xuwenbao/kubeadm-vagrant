@@ -24,7 +24,7 @@ networking:
   podSubnet: #{POD_NW_CIDR}
 kubernetesVersion: v1.8.4
 token: #{KUBETOKEN}
-tokenTTL: 0
+tokenTTL: 2400h
 imageRepository: xuwenbao
 EOF
 

@@ -23,8 +23,8 @@ deb http://mirrors.aliyun.com/ubuntu/ xenial-security universe
 deb http://mirrors.aliyun.com/ubuntu/ xenial-security multiverse
 EOF
 
-# curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-apt-key add /srv/kubeadm/apt-key.gpg
+#curl http://mirrors.ustc.edu.cn/kubernetes/apt/dists/kubernetes-xenial/Release.gpg | apt-key add -
+apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 3746C208A7317B0F
 cat <<EOF > /etc/apt/sources.list.d/kubernetes.list
 deb http://mirrors.ustc.edu.cn/kubernetes/apt/ kubernetes-xenial main
 EOF
