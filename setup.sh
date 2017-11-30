@@ -26,7 +26,7 @@ EOF
 # curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 apt-key add /srv/kubeadm/apt-key.gpg
 cat <<EOF > /etc/apt/sources.list.d/kubernetes.list
-deb http://apt.kubernetes.io/ kubernetes-xenial main
+deb http://mirrors.ustc.edu.cn/kubernetes/apt/ kubernetes-xenial main
 EOF
 apt-get update
 apt-get install -y docker.io kubelet kubeadm kubectl kubernetes-cni

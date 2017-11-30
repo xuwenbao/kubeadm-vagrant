@@ -1,6 +1,0 @@
-apiVersion: kubeadm.k8s.io/v1alpha1
-kind: MasterConfiguration
-etcd:
-  image: xuwenbao/etcd-amd64:3.0.17
-kubernetesVersion: v1.8.4
-imageRepository: xuwenbao

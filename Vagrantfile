@@ -10,6 +10,26 @@ POD_NW_CIDR = "10.244.0.0/16"
 #Generate new using steps in README
 KUBETOKEN = "b029ee.968a33e8d8e6bb0d"
 
+$kubeadmconfscript=<<CONFSCRIPT
+
+mkdir -p /etc/kubernetes
+cat <<EOF > /etc/kubernetes/kubeadm.conf
+apiVersion: kubeadm.k8s.io/v1alpha1
+kind: MasterConfiguration
+api:
+  advertiseAddress: #{MASTER_IP}
+  etcd:
+  image: xuwenbao/etcd-amd64:3.0.17
+networking:
+  podSubnet: #{POD_NW_CIDR}
+kubernetesVersion: v1.8.4
+token: #{KUBETOKEN}
+tokenTTL: 0
+imageRepository: xuwenbao
+EOF
+
+CONFSCRIPT
+
 $kubeminionscript = <<MINIONSCRIPT
 
 kubeadm reset
@@ -20,7 +40,8 @@ MINIONSCRIPT
 $kubemasterscript = <<SCRIPT
 
 kubeadm reset
-kubeadm init --apiserver-advertise-address=#{MASTER_IP} --pod-network-cidr=#{POD_NW_CIDR} --token #{KUBETOKEN} --token-ttl 0 --config=/srv/kubeadm/kubeadm-master.yml
+# kubeadm init --apiserver-advertise-address=#{MASTER_IP} --pod-network-cidr=#{POD_NW_CIDR} --token #{KUBETOKEN} --token-ttl 0
+kubeadm init --config=/etc/kubernetes/kubeadm.conf
 
 mkdir -p $HOME/.kube
 sudo cp -Rf /etc/kubernetes/admin.conf $HOME/.kube/config
@@ -39,7 +60,7 @@ Vagrant.configure("2") do |config|
     l.memory = "1024"
   end
 
-  config.vm.synced_folder ".", "/srv/kubeadm"
+  # config.vm.synced_folder ".", "/srv/kubeadm"
   config.vm.provision :shell, :path => "setup.sh"
 
   config.hostmanager.enabled = true
@@ -54,6 +75,7 @@ Vagrant.configure("2") do |config|
         vb.customize ["modifyvm", :id, "--cpus", "2"]
         vb.customize ["modifyvm", :id, "--memory", "2048"]
       end
+      subconfig.vm.provision :shell, inline: $kubeadmconfscript
       subconfig.vm.provision :shell, inline: $kubemasterscript
     end
   end
