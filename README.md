@@ -1,6 +1,6 @@
 # kubeadm-vagrant
 
-使用kubeadm和vagrnat在部署Kubernetes集群, 支持Windows和Linux系统.
+使用kubeadm和vagrnat部署可用于研发、测试、学习等用途的非生产环境Kubernetes集群, 支持Windows和Linux系统.
 
 ## 环境要求
 
