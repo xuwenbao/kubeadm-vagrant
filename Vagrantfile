@@ -77,6 +77,9 @@ Vagrant.configure("2") do |config|
       end
       subconfig.vm.provision :shell, inline: $kubeadmconfscript
       subconfig.vm.provision :shell, inline: $kubemasterscript
+
+      subconfig.vm.network "forwarded_port", guest: 4194, host: 4194
+      subconfig.vm.network "forwarded_port", guest: 10250, host: 10250
     end
   end
 
