@@ -1,6 +1,7 @@
 BOX_IMAGE = "ubuntu/xenial64"
-DOCKER_VERSION = "1.13.1-0ubuntu1~16.04.2"
-KUBERNETES_VERSION = "1.8.4-00"
+DOCKER_APT_VERSION = "1.13.1-0ubuntu1~16.04.2"
+KUBERNETES_VERSION = "1.8.4"
+KUBERNETES_APT_VERSION = "1.8.4-00"
 SETUP_MASTER = true
 SETUP_NODES = true
 NODE_COUNT = 2
@@ -63,7 +64,7 @@ Vagrant.configure("2") do |config|
   end
 
   # config.vm.synced_folder ".", "/srv/kubeadm"
-  config.vm.provision :shell, :path => "setup.sh", env: {"DOCKER_VERSION" => DOCKER_VERSION, "KUBERNETES_VERSION" => KUBERNETES_VERSION }
+  config.vm.provision :shell, :path => "setup.sh", env: {"DOCKER_VERSION" => DOCKER_APT_VERSION, "KUBERNETES_VERSION" => KUBERNETES_APT_VERSION }
 
   config.hostmanager.enabled = true
   config.hostmanager.manage_guest = true
