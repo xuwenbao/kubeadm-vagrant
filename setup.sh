@@ -36,7 +36,7 @@ CGROUP_DRIVER=$(sudo docker info | grep "Cgroup Driver" | awk '{print $3}')
 
 sed -i "s|KUBELET_KUBECONFIG_ARGS=|KUBELET_KUBECONFIG_ARGS=--cgroup-driver=$CGROUP_DRIVER --pod-infra-container-image=xuwenbao/pause-amd64:3.0 |g" /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 
-sed -i 's/10.96.0.10/10.3.3.10/g' /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+# sed -i 's/10.96.0.10/10.3.3.10/g' /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 
 systemctl daemon-reload
 
