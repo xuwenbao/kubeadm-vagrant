@@ -1,4 +1,6 @@
 BOX_IMAGE = "ubuntu/xenial64"
+DOCKER_VERSION = "1.13.1"
+KUBERNETES_VERSION = "1.8.4"
 SETUP_MASTER = true
 SETUP_NODES = true
 NODE_COUNT = 2
@@ -22,7 +24,7 @@ api:
   image: xuwenbao/etcd-amd64:3.0.17
 networking:
   podSubnet: #{POD_NW_CIDR}
-kubernetesVersion: v1.8.4
+kubernetesVersion: v#{KUBERNETES_VERSION}
 token: #{KUBETOKEN}
 tokenTTL: 2400h
 imageRepository: xuwenbao
@@ -61,7 +63,7 @@ Vagrant.configure("2") do |config|
   end
 
   # config.vm.synced_folder ".", "/srv/kubeadm"
-  config.vm.provision :shell, :path => "setup.sh"
+  config.vm.provision :shell, :path => "setup.sh", env: {"DOCKER_VERSION" => DOCKER_VERSION, "KUBERNETES_VERSION" => KUBERNETES_VERSION }
 
   config.hostmanager.enabled = true
   config.hostmanager.manage_guest = true
