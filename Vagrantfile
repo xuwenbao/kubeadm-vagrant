@@ -29,6 +29,8 @@ kubernetesVersion: v#{KUBERNETES_VERSION}
 token: #{KUBETOKEN}
 tokenTTL: 2400h
 imageRepository: xuwenbao
+apiServerExtraArgs:
+  insecure-port: "8080"
 EOF
 
 CONFSCRIPT
@@ -81,6 +83,7 @@ Vagrant.configure("2") do |config|
       subconfig.vm.provision :shell, inline: $kubeadmconfscript
       subconfig.vm.provision :shell, inline: $kubemasterscript
 
+      subconfig.vm.network "forwarded_port", guest: 8080, host: 8080
       subconfig.vm.network "forwarded_port", guest: 4194, host: 4194
       subconfig.vm.network "forwarded_port", guest: 10250, host: 10250
     end
