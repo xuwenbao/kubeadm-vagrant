@@ -1,7 +1,7 @@
 BOX_IMAGE = "ubuntu/xenial64"
 DOCKER_APT_VERSION = "1.13.1-0ubuntu1~16.04.2"
-KUBERNETES_VERSION = "1.8.4"
-KUBERNETES_APT_VERSION = "1.8.4-00"
+KUBERNETES_VERSION = "1.10.2"
+KUBERNETES_APT_VERSION = "1.10.2-00"
 SETUP_MASTER = true
 SETUP_NODES = true
 NODE_COUNT = 2
@@ -22,13 +22,13 @@ kind: MasterConfiguration
 api:
   advertiseAddress: #{MASTER_IP}
   etcd:
-  image: xuwenbao/etcd-amd64:3.0.17
+  image: registry.cn-beijing.aliyuncs.com/k8s_images/etcd-amd64:3.1.13
 networking:
   podSubnet: #{POD_NW_CIDR}
 kubernetesVersion: v#{KUBERNETES_VERSION}
 token: #{KUBETOKEN}
 tokenTTL: 2400h
-imageRepository: xuwenbao
+imageRepository: registry.cn-beijing.aliyuncs.com/k8s_images
 apiServerExtraArgs:
   insecure-port: "8080"
 EOF
@@ -38,7 +38,7 @@ CONFSCRIPT
 $kubeminionscript = <<MINIONSCRIPT
 
 kubeadm reset
-kubeadm join --token #{KUBETOKEN} #{MASTER_IP}:6443
+kubeadm join --token #{KUBETOKEN} #{MASTER_IP}:6443 --discovery-token-unsafe-skip-ca-verification
 
 MINIONSCRIPT
 
