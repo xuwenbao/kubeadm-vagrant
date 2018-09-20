@@ -4,6 +4,7 @@
 
 cp  /etc/apt/sources.list  /etc/apt/sources.list.old
 sed -i 's/archive.ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
+
 # cat <<EOF > /etc/apt/sources.list
 # deb-src http://archive.ubuntu.com/ubuntu xenial main restricted #Added by software-properties
 # deb http://mirrors.aliyun.com/ubuntu/ xenial main restricted
@@ -24,10 +25,11 @@ sed -i 's/archive.ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
 # deb http://mirrors.aliyun.com/ubuntu/ xenial-security multiverse
 # EOF
 
-# apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 3746C208A7317B0F
-# cat <<EOF > /etc/apt/sources.list.d/kubernetes.list
-# deb http://mirrors.ustc.edu.cn/kubernetes/apt/ kubernetes-xenial main
-# EOF
+apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 6A030B21BA07F4FB
+cat <<EOF > /etc/apt/sources.list.d/kubernetes.list
+deb http://mirrors.ustc.edu.cn/kubernetes/apt/ kubernetes-xenial main
+EOF
+
 apt-get update
 apt-get install -y aufs-tools docker.io kubelet=$KUBERNETES_VERSION kubeadm=$KUBERNETES_VERSION kubectl=$KUBERNETES_VERSION --allow-unauthenticated
 systemctl enable docker && systemctl start docker

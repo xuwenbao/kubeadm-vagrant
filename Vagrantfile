@@ -66,7 +66,8 @@ Vagrant.configure("2") do |config|
   end
 
   # config.vm.synced_folder ".", "/srv/kubeadm"
-  config.vm.provision :shell, :path => "setup.sh", env: {"DOCKER_VERSION" => DOCKER_APT_VERSION, "KUBERNETES_VERSION" => KUBERNETES_APT_VERSION }
+  # config.vm.provision :shell, :path => "setup.sh", env: {"DOCKER_VERSION" => DOCKER_APT_VERSION, "KUBERNETES_VERSION" => KUBERNETES_APT_VERSION }
+  config.vm.provision :shell, :path => "setup.sh", env: {"KUBERNETES_VERSION" => KUBERNETES_APT_VERSION }
 
   config.hostmanager.enabled = true
   config.hostmanager.manage_guest = true
