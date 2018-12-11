@@ -5,26 +5,6 @@
 cp  /etc/apt/sources.list  /etc/apt/sources.list.old
 sed -i 's/archive.ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
 
-# cat <<EOF > /etc/apt/sources.list
-# deb-src http://archive.ubuntu.com/ubuntu xenial main restricted #Added by software-properties
-# deb http://mirrors.aliyun.com/ubuntu/ xenial main restricted
-# deb-src http://mirrors.aliyun.com/ubuntu/ xenial main restricted multiverse universe #Added by software-properties
-# deb http://mirrors.aliyun.com/ubuntu/ xenial-updates main restricted
-# deb-src http://mirrors.aliyun.com/ubuntu/ xenial-updates main restricted multiverse universe #Added by software-properties
-# deb http://mirrors.aliyun.com/ubuntu/ xenial universe
-# deb http://mirrors.aliyun.com/ubuntu/ xenial-updates universe
-# deb http://mirrors.aliyun.com/ubuntu/ xenial multiverse
-# deb http://mirrors.aliyun.com/ubuntu/ xenial-updates multiverse
-# deb http://mirrors.aliyun.com/ubuntu/ xenial-backports main restricted universe multiverse
-# deb-src http://mirrors.aliyun.com/ubuntu/ xenial-backports main restricted universe multiverse #Added by software-properties
-# deb http://archive.canonical.com/ubuntu xenial partner
-# deb-src http://archive.canonical.com/ubuntu xenial partner
-# deb http://mirrors.aliyun.com/ubuntu/ xenial-security main restricted
-# deb-src http://mirrors.aliyun.com/ubuntu/ xenial-security main restricted multiverse universe #Added by software-properties
-# deb http://mirrors.aliyun.com/ubuntu/ xenial-security universe
-# deb http://mirrors.aliyun.com/ubuntu/ xenial-security multiverse
-# EOF
-
 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 6A030B21BA07F4FB
 cat <<EOF > /etc/apt/sources.list.d/kubernetes.list
 deb http://mirrors.ustc.edu.cn/kubernetes/apt/ kubernetes-xenial main
@@ -42,5 +22,4 @@ sed -i "s|KUBELET_KUBECONFIG_ARGS=|KUBELET_KUBECONFIG_ARGS=--cgroup-driver=$CGRO
 # sed -i 's/10.96.0.10/10.3.3.10/g' /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 
 systemctl daemon-reload
-
 systemctl stop kubelet && systemctl start kubelet
