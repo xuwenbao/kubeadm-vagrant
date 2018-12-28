@@ -55,6 +55,12 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 kubectl apply -f https://raw.githubusercontent.com/xuwenbao/kubeadm-vagrant/master/kube-flannel.yaml
 
+# install helm
+kubectl apply -f https://raw.githubusercontent.com/xuwenbao/kubeadm-vagrant/master/helm-rbac.yaml
+sudo curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash
+docker pull xuwenbao/charts && docker run -d -p 80:80 --restart=always xuwenbao/charts
+helm init --upgrade -i registry.cn-hangzhou.aliyuncs.com/google_containers/tiller:v2.12.0 --stable-repo-url http://127.0.0.1/charts --local-repo-url http://127.0.0.1/charts --service-account tiller
+
 SCRIPT
 
 Vagrant.configure("2") do |config|
