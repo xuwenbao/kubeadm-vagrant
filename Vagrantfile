@@ -57,7 +57,12 @@ kubectl apply -f https://raw.githubusercontent.com/xuwenbao/kubeadm-vagrant/mast
 
 # install helm
 kubectl apply -f https://raw.githubusercontent.com/xuwenbao/kubeadm-vagrant/master/helm-rbac.yaml
-sudo curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash
+
+curl -SsL https://storage.googleapis.com/kubernetes-helm/helm-v2.12.0-linux-amd64.tar.gz -o /tmp/helm-v2.7.2-linux-amd64.tar.gz
+tar -zxvf /tmp/helm-v2.12.0-linux-amd64.tar.gz -C /tmp
+mv /tmp/linux-amd64/helm  /usr/local/bin/helm
+chmod 755 /usr/local/bin/helm
+
 docker pull xuwenbao/charts && docker run -d -p 80:80 --restart=always xuwenbao/charts
 helm init --upgrade -i registry.cn-hangzhou.aliyuncs.com/google_containers/tiller:v2.12.0 --stable-repo-url http://127.0.0.1/charts --local-repo-url http://127.0.0.1/charts --service-account tiller
 
