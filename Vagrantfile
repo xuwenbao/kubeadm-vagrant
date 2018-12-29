@@ -56,11 +56,11 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 kubectl apply -f https://raw.githubusercontent.com/xuwenbao/kubeadm-vagrant/master/kube-flannel.yaml
 
 # install helm
-kubectl apply -f https://raw.githubusercontent.com/xuwenbao/kubeadm-vagrant/master/helm-rbac.yaml
+# kubectl apply -f https://raw.githubusercontent.com/xuwenbao/kubeadm-vagrant/master/helm-rbac.yaml
 
-sudo curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
-sudo docker pull xuwenbao/charts && sudo docker run -d -p 80:80 --restart=always xuwenbao/charts
-helm init --upgrade -i registry.cn-hangzhou.aliyuncs.com/google_containers/tiller:v2.12.0 --stable-repo-url http://127.0.0.1/charts --local-repo-url http://127.0.0.1/charts --service-account tiller
+# sudo curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash
+# sudo docker pull xuwenbao/charts && sudo docker run -d -p 80:80 --restart=always xuwenbao/charts
+# helm init --upgrade -i registry.cn-hangzhou.aliyuncs.com/google_containers/tiller:v2.12.0 --stable-repo-url http://127.0.0.1/charts --local-repo-url http://127.0.0.1/charts --service-account tiller
 
 SCRIPT
 
