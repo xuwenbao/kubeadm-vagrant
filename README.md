@@ -34,3 +34,8 @@ sudo su -
 kubectl get nodes
 kubectl get pods --all-namespaces
 ```
+
+## 计划添加的功能
+
+1. 支持可选配置Docker Registry Mirror，例如：可以配置阿里云镜像加速器加速从Docker Hub下载镜像。
+2. 支持可选安装Helm、Rook等其他Kubernetes社区工具。
