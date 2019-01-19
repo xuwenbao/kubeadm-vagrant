@@ -2,16 +2,29 @@
 
 # Source: http://kubernetes.io/docs/getting-started-guides/kubeadm/
 
-cp  /etc/apt/sources.list  /etc/apt/sources.list.old
-sed -i 's/archive.ubuntu.com/mirrors.ustc.edu.cn/g' /etc/apt/sources.list
+cp /etc/apt/sources.list /etc/apt/sources.list.bak
+echo deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial main restricted universe multiverse > /etc/apt/sources.list
+echo deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial-updates main restricted universe multiverse >> /etc/apt/sources.list
+echo deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial-backports main restricted universe multiverse >> /etc/apt/sources.list
+echo deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ xenial-security main restricted universe multiverse >> /etc/apt/sources.list
 
 apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 6A030B21BA07F4FB
 cat <<EOF > /etc/apt/sources.list.d/kubernetes.list
 deb http://mirrors.ustc.edu.cn/kubernetes/apt/ kubernetes-xenial main
 EOF
+# apt-get update
 
-apt-get update
-apt-get install -y aufs-tools docker.io kubelet=$KUBERNETES_VERSION kubeadm=$KUBERNETES_VERSION kubectl=$KUBERNETES_VERSION --allow-unauthenticated
+curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
+apt-get install -y kubelet kubeadm kubectl --allow-unauthenticated
+
+# use my aliyun docker image mirror
+mkdir -p /etc/docker
+tee /etc/docker/daemon.json <<-'EOF'
+{
+  "registry-mirrors": ["https://5xtzb6tv.mirror.aliyuncs.com"]
+}
+EOF
+
 systemctl enable docker && systemctl start docker
 systemctl enable kubelet && systemctl start kubelet
 

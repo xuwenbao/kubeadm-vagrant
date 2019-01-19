@@ -1,7 +1,4 @@
 BOX_IMAGE = "ubuntu/xenial64"
-# DOCKER_APT_VERSION = "17.03.2-0ubuntu2~16.04.1"
-KUBERNETES_VERSION = "1.10.2"
-KUBERNETES_APT_VERSION = "1.10.2-00"
 SETUP_MASTER = true
 SETUP_NODES = true
 NODE_COUNT = 2
@@ -17,35 +14,44 @@ $kubeadmconfscript=<<CONFSCRIPT
 
 mkdir -p /etc/kubernetes
 cat <<EOF > /etc/kubernetes/kubeadm.conf
-apiVersion: kubeadm.k8s.io/v1alpha1
-kind: MasterConfiguration
-api:
+apiVersion: kubeadm.k8s.io/v1beta1
+kind: InitConfiguration
+bootstrapTokens:
+- token: "#{KUBETOKEN}"
+  description: "kubeadm bootstrap token"
+  ttl: "2400h"
+localAPIEndpoint:
   advertiseAddress: #{MASTER_IP}
-  etcd:
-  image: registry.cn-beijing.aliyuncs.com/k8s_images/etcd-amd64:3.1.13
+---
+apiVersion: kubeadm.k8s.io/v1beta1
+kind: ClusterConfiguration
+kubernetesVersion: v1.13.0
+imageRepository: xuwenbao
+useHyperKubeImage: false
+etcd:
+  local:
+    imageRepository: xuwenbao
 networking:
-  podSubnet: #{POD_NW_CIDR}
-kubernetesVersion: v#{KUBERNETES_VERSION}
-token: #{KUBETOKEN}
-tokenTTL: 2400h
-imageRepository: registry.cn-beijing.aliyuncs.com/k8s_images
-apiServerExtraArgs:
-  insecure-port: "8080"
-  insecure-bind-address: "0.0.0.0"
+  podSubnet: "#{POD_NW_CIDR}"
+  dnsDomain: "cluster.local"
+apiServer:
+  extraArgs:
+    insecure-port: "8080"
+    insecure-bind-address: "0.0.0.0"
 EOF
 
 CONFSCRIPT
 
 $kubeminionscript = <<MINIONSCRIPT
 
-kubeadm reset
+kubeadm reset --force
 kubeadm join --token #{KUBETOKEN} #{MASTER_IP}:6443 --discovery-token-unsafe-skip-ca-verification
 
 MINIONSCRIPT
 
 $kubemasterscript = <<SCRIPT
 
-kubeadm reset
+kubeadm reset --force
 # kubeadm init --apiserver-advertise-address=#{MASTER_IP} --pod-network-cidr=#{POD_NW_CIDR} --token #{KUBETOKEN} --token-ttl 0
 kubeadm init --config=/etc/kubernetes/kubeadm.conf
 
@@ -73,8 +79,7 @@ Vagrant.configure("2") do |config|
   end
 
   # config.vm.synced_folder ".", "/srv/kubeadm"
-  # config.vm.provision :shell, :path => "setup.sh", env: {"DOCKER_VERSION" => DOCKER_APT_VERSION, "KUBERNETES_VERSION" => KUBERNETES_APT_VERSION }
-  config.vm.provision :shell, :path => "setup.sh", env: {"KUBERNETES_VERSION" => KUBERNETES_APT_VERSION }
+  config.vm.provision :shell, :path => "setup.sh"
 
   config.hostmanager.enabled = true
   config.hostmanager.manage_guest = true
