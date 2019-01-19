@@ -1,4 +1,7 @@
 BOX_IMAGE = "ubuntu/xenial64"
+KUBERNETES_VERSION = "v1.13.2"
+ETCD_VERSION = "3.2.24"
+IMAGE_REPOSITORY = "xuwenbao"
 SETUP_MASTER = true
 SETUP_NODES = true
 NODE_COUNT = 2
@@ -25,12 +28,13 @@ localAPIEndpoint:
 ---
 apiVersion: kubeadm.k8s.io/v1beta1
 kind: ClusterConfiguration
-kubernetesVersion: v1.13.0
-imageRepository: xuwenbao
+kubernetesVersion: "#{KUBERNETES_VERSION}"
+imageRepository: "#{IMAGE_REPOSITORY}"
 useHyperKubeImage: false
 etcd:
   local:
-    imageRepository: xuwenbao
+    imageRepository: "#{IMAGE_REPOSITORY}"
+    imageTag: "#{ETCD_VERSION}"
 networking:
   podSubnet: "#{POD_NW_CIDR}"
   dnsDomain: "cluster.local"
