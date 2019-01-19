@@ -1,7 +1,7 @@
 BOX_IMAGE = "ubuntu/xenial64"
 KUBERNETES_VERSION = "v1.13.2"
 ETCD_VERSION = "3.2.24"
-IMAGE_REPOSITORY = "xuwenbao"
+IMAGE_REPOSITORY = "registry.cn-hangzhou.aliyuncs.com/xuwenbao"
 SETUP_MASTER = true
 SETUP_NODES = true
 NODE_COUNT = 2
@@ -100,6 +100,7 @@ Vagrant.configure("2") do |config|
       subconfig.vm.provision :shell, inline: $kubeadmconfscript
       subconfig.vm.provision :shell, inline: $kubemasterscript
 
+      subconfig.vm.network "forwarded_port", guest: 2376, host: 2376
       subconfig.vm.network "forwarded_port", guest: 8080, host: 8080
       subconfig.vm.network "forwarded_port", guest: 8081, host: 8081
       subconfig.vm.network "forwarded_port", guest: 6443, host: 6443
