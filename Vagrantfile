@@ -67,9 +67,9 @@ kubectl apply -f https://raw.githubusercontent.com/xuwenbao/kubeadm-vagrant/mast
 
 # install helm
 kubectl apply -f https://raw.githubusercontent.com/xuwenbao/kubeadm-vagrant/master/helm-rbac.yaml
-sudo docker pull xuwenbao/charts && sudo docker run -d -p 80:80 --restart=always --name=charts xuwenbao/charts
-sudo docker cp charts:/usr/local/bin/helm /usr/local/bin/
-helm init --upgrade -i registry.cn-hangzhou.aliyuncs.com/google_containers/tiller:v2.12.0 --stable-repo-url http://127.0.0.1/charts --local-repo-url http://127.0.0.1/charts --service-account tiller
+sudo docker pull xuwenbao/charts && sudo docker run -d -p 8879:80 --restart=always --name=charts xuwenbao/charts
+# sudo docker cp charts:/usr/local/bin/helm /usr/local/bin/
+# helm init --upgrade -i registry.cn-hangzhou.aliyuncs.com/google_containers/tiller:v2.12.0 --stable-repo-url http://127.0.0.1/charts --local-repo-url http://127.0.0.1/charts --service-account tiller
 
 SCRIPT
 
@@ -104,6 +104,7 @@ Vagrant.configure("2") do |config|
       subconfig.vm.network "forwarded_port", guest: 8080, host: 8080
       subconfig.vm.network "forwarded_port", guest: 8081, host: 8081
       subconfig.vm.network "forwarded_port", guest: 6443, host: 6443
+      subconfig.vm.network "forwarded_port", guest: 8879, host: 8879
       subconfig.vm.network "forwarded_port", guest: 4194, host: 4194
       subconfig.vm.network "forwarded_port", guest: 10250, host: 10250
     end
