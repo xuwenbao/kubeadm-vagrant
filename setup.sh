@@ -12,22 +12,9 @@ apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 6A030B21BA07F4FB
 cat <<EOF > /etc/apt/sources.list.d/kubernetes.list
 deb http://mirrors.ustc.edu.cn/kubernetes/apt/ kubernetes-xenial main
 EOF
-# apt-get update
 
 curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
 apt-get install -y kubelet kubeadm kubectl --allow-unauthenticated
-
-# use my aliyun docker image mirror
-# mkdir -p /etc/docker
-# tee /etc/docker/daemon.json <<-'EOF'
-# {
-#   "registry-mirrors": ["https://5xtzb6tv.mirror.aliyuncs.com"]
-#   "hosts": [
-#     "tcp://0.0.0.0:2376",
-#     "unix:///var/run/docker.sock"
-#   ]
-# }
-# EOF
 
 mkdir -p /etc/systemd/system/docker.service.d
 tee /etc/systemd/system/docker.service.d/override.conf <<-'EOF'
