@@ -4,7 +4,7 @@
 
 ## 前言
 
-虽然Kubernetes社区提供了很多部署工具来降低部署一套Kubernetes集群的学习成本，如：minikube、kops、ansible和本项目使用的kubeadm等等，但完整部署出一套Kubernetes集群仍不是一个简单的过程，何况在国内还有GFW的存在。
+虽然Kubernetes社区提供了很多部署工具来降低部署一套Kubernetes集群的学习成本，如：minikube、kops、ansible和本项目使用的kubeadm等等，但完整部署出一套Kubernetes集群仍不是一个简单的过程，何况在国内还有GFW的存在。
 我们应该将更多精力用在学习Kubernetes核心理念和寻找最佳实践上，而不是一次次安装、更新与升级。重复的工作应该自动化完成 ：）
 
 ## 资源需求
