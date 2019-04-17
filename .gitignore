@@ -1,5 +1,6 @@
 .vagrant
 .vscode
 .idea
+var/
 *.log
 

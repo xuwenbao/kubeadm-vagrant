@@ -1,5 +1,6 @@
 BOX_IMAGE = "ubuntu/xenial64"
-KUBERNETES_VERSION = "v1.13.2"
+KUBERNETES_VERSION = "1.13.2"
+CNI_VERSION="0.6.0"
 ETCD_VERSION = "3.2.24"
 IMAGE_REPOSITORY = "registry.cn-hangzhou.aliyuncs.com/xuwenbao"
 SETUP_MASTER = true
@@ -28,7 +29,7 @@ localAPIEndpoint:
 ---
 apiVersion: kubeadm.k8s.io/v1beta1
 kind: ClusterConfiguration
-kubernetesVersion: "#{KUBERNETES_VERSION}"
+kubernetesVersion: "v#{KUBERNETES_VERSION}"
 imageRepository: "#{IMAGE_REPOSITORY}"
 useHyperKubeImage: false
 etcd:
@@ -48,12 +49,16 @@ CONFSCRIPT
 
 $kubeminionscript = <<MINIONSCRIPT
 
+set -e
+
 kubeadm reset --force
 kubeadm join --token #{KUBETOKEN} #{MASTER_IP}:6443 --discovery-token-unsafe-skip-ca-verification
 
 MINIONSCRIPT
 
 $kubemasterscript = <<SCRIPT
+
+set -e
 
 kubeadm reset --force
 # kubeadm init --apiserver-advertise-address=#{MASTER_IP} --pod-network-cidr=#{POD_NW_CIDR} --token #{KUBETOKEN} --token-ttl 0
@@ -82,9 +87,7 @@ Vagrant.configure("2") do |config|
     l.memory = "1024"
   end
 
-  # config.vm.synced_folder ".", "/srv/kubeadm"
-  config.vm.provision :shell, :path => "setup.sh"
-
+  config.vm.provision :shell, :path => "setup.sh", env: {"KUBERNETES_VERSION" => KUBERNETES_VERSION, "CNI_VERSION" => CNI_VERSION}
   config.hostmanager.enabled = true
   config.hostmanager.manage_guest = true
   # config.vm.network "public_network"
@@ -97,6 +100,7 @@ Vagrant.configure("2") do |config|
         vb.customize ["modifyvm", :id, "--cpus", "2"]
         vb.customize ["modifyvm", :id, "--memory", "2048"]
       end
+      subconfig.vm.synced_folder ".", "/vagrant"
       subconfig.vm.provision :shell, inline: $kubeadmconfscript
       subconfig.vm.provision :shell, inline: $kubemasterscript
 
