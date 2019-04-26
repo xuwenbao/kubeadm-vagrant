@@ -26,6 +26,7 @@ bootstrapTokens:
   ttl: "2400h"
 localAPIEndpoint:
   advertiseAddress: #{MASTER_IP}
+skipPhases: "addons/proxy"
 ---
 apiVersion: kubeadm.k8s.io/v1beta1
 kind: ClusterConfiguration
@@ -68,7 +69,9 @@ mkdir -p $HOME/.kube
 sudo cp -Rf /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
-kubectl apply -f https://raw.githubusercontent.com/xuwenbao/kubeadm-vagrant/master/kube-flannel.yaml
+# 使用flannel或kube-router，二者选其一
+# kubectl apply -f https://raw.githubusercontent.com/xuwenbao/kubeadm-vagrant/master/kube-flannel.yaml
+kubectl apply -f https://raw.githubusercontent.com/xuwenbao/kubeadm-vagrant/master/kube-router.yaml
 
 # install helm
 kubectl apply -f https://raw.githubusercontent.com/xuwenbao/kubeadm-vagrant/master/helm-rbac.yaml
