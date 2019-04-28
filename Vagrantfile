@@ -26,7 +26,6 @@ bootstrapTokens:
   ttl: "2400h"
 localAPIEndpoint:
   advertiseAddress: #{MASTER_IP}
-skipPhases: "addons/proxy"
 ---
 apiVersion: kubeadm.k8s.io/v1beta1
 kind: ClusterConfiguration
@@ -63,15 +62,20 @@ set -e
 
 kubeadm reset --force
 # kubeadm init --apiserver-advertise-address=#{MASTER_IP} --pod-network-cidr=#{POD_NW_CIDR} --token #{KUBETOKEN} --token-ttl 0
-kubeadm init --config=/etc/kubernetes/kubeadm.conf
+kubeadm init --config=/etc/kubernetes/kubeadm.conf --skip-phases addon/kube-proxy
 
 mkdir -p $HOME/.kube
 sudo cp -Rf /etc/kubernetes/admin.conf $HOME/.kube/config
 sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
-# 使用flannel或kube-router，二者选其一
-# kubectl apply -f https://raw.githubusercontent.com/xuwenbao/kubeadm-vagrant/master/kube-flannel.yaml
-kubectl apply -f https://raw.githubusercontent.com/xuwenbao/kubeadm-vagrant/master/kube-router.yaml
+# install flannel
+kubectl apply -f https://raw.githubusercontent.com/xuwenbao/kubeadm-vagrant/master/kube-flannel.yaml
+
+# install kube-router
+# kubectl apply -f https://raw.githubusercontent.com/xuwenbao/kubeadm-vagrant/master/kube-router.yaml
+# 由于kubeadm还未完全支持可选安装kube-proxy，需要手动执行如下清除命令
+# kubectl delete ds kube-proxy -n kube-system
+# docker run --privileged -v /lib/modules:/lib/modules --net=host k8s.gcr.io/kube-proxy-amd64:v1.10.2 kube-proxy --cleanup
 
 # install helm
 kubectl apply -f https://raw.githubusercontent.com/xuwenbao/kubeadm-vagrant/master/helm-rbac.yaml
