@@ -62,7 +62,7 @@ set -e
 
 kubeadm reset --force
 # kubeadm init --apiserver-advertise-address=#{MASTER_IP} --pod-network-cidr=#{POD_NW_CIDR} --token #{KUBETOKEN} --token-ttl 0
-kubeadm init --config=/etc/kubernetes/kubeadm.conf --skip-phases addon/kube-proxy
+kubeadm init --config=/etc/kubernetes/kubeadm.conf
 
 mkdir -p $HOME/.kube
 sudo cp -Rf /etc/kubernetes/admin.conf $HOME/.kube/config
@@ -71,7 +71,7 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 # install flannel
 kubectl apply -f https://raw.githubusercontent.com/xuwenbao/kubeadm-vagrant/master/kube-flannel.yaml
 
-# install kube-router
+# install kube-router, 见 https://github.com/cloudnativelabs/kube-router/blob/master/docs/kubeadm.md
 # kubectl apply -f https://raw.githubusercontent.com/xuwenbao/kubeadm-vagrant/master/kube-router.yaml
 # 由于kubeadm还未完全支持可选安装kube-proxy，需要手动执行如下清除命令
 # kubectl delete ds kube-proxy -n kube-system
